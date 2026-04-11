@@ -517,7 +517,7 @@ p { color: var(--text-gray); }
     align-items: center;
 }
 
-.input-with-icon input, .input-with-icon select {
+.input-with-icon input, .input-with-icon select, .input-with-icon textarea {
     width: 100%;
     padding: 0.85rem 1rem 0.85rem 2.5rem; /* Space for icon on the left due to RTL styling specifics */
     border: 1px solid var(--form-input-border);
@@ -531,7 +531,7 @@ p { color: var(--text-gray); }
 }
 
 /* For inputs that need left-aligned LTR text but staying in RTL flow */
-.input-with-icon input::placeholder {
+.input-with-icon input::placeholder, .input-with-icon textarea::placeholder {
     color: #a0aec0;
     text-align: left;
     direction: ltr; /* Force placeholder to left */
@@ -545,7 +545,7 @@ p { color: var(--text-gray); }
 /* Position icon on right side (conceptually left in visual LTR inside RTL context? No, image has placeholders on left, icons on right) */
 /* Wait, image: "Nom complet" is on left. User icon is on right. */
 /* So input text is LTR, icon is at right position. */
-.input-with-icon input, .input-with-icon select {
+.input-with-icon input, .input-with-icon select, .input-with-icon textarea {
     text-align: left;
     direction: ltr;
     padding: 0.85rem 2.8rem 0.85rem 1rem; /* Space for right-positioned icon */
@@ -558,7 +558,7 @@ p { color: var(--text-gray); }
     pointer-events: none;
 }
 
-.input-with-icon input:focus, .input-with-icon select:focus {
+.input-with-icon input:focus, .input-with-icon select:focus, .input-with-icon textarea:focus {
     outline: none;
     border-color: #3182ce;
     box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.1);

@@ -78,9 +78,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Form submission mock
     const form = document.querySelector('.cod-form');
     if(form) {
+        /* Disabled mock submission to let Netlify handle the real POST processing
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             alert('تم استلام طلبك بنجاح! سنتصل بك قريباً لتأكيد الطلب.');
         });
+        */
     }
 });
