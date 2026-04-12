@@ -83,7 +83,7 @@
         </div>
     </section>
 
-    <!-- COD Order Form Section (MOVED UP) -->
+    <!-- COD Order Form Section -->
     <section class="order-section" id="order-form">
         <div class="container order-container fade-in">
             <div class="form-wrapper">
@@ -91,43 +91,60 @@
                     <h2>استمارة الطلب</h2>
                     <p>المرجو إدخال معلوماتك الخاصة بك</p>
                 </div>
- 
 
+                <!-- FIXED: Quantity selector now near the price for live total update -->
                 <div class="price-summary">
+                    <div class="summary-row">
+                        <span class="summary-label">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                            الكمية
+                        </span>
+                        <!-- FIXED: Quantity moved here so total updates visibly -->
+                        <div class="quantity-selector inline-qty">
+                            <button type="button" class="qty-btn" id="minus-btn">−</button>
+                            <input type="number" id="qty-input" value="1" min="1" max="10" readonly>
+                            <button type="button" class="qty-btn" id="plus-btn">+</button>
+                        </div>
+                    </div>
                     <div class="summary-row">
                         <span class="summary-label">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
                             سعر المنتج
                         </span>
-                        <span class="summary-value dzd-font">DZD 2,900.00</span>
+                        <span class="summary-value dzd-font" id="product-price-display">DZD 2,900.00</span>
                     </div>
                     <div class="summary-row">
                         <span class="summary-label">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
                             سعر التوصيل
                         </span>
-                        <span class="summary-value red-text">--</span>
+                        <!-- FIXED: No more "ghost" -- . Shows real value. -->
+                        <span class="summary-value" id="shipping-display">500.00 DZD</span>
                     </div>
                     <hr class="summary-divider">
                     <div class="summary-row total-row">
                         <span class="summary-label">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="10" x2="16" y2="10"/><line x1="12" y1="10" x2="12" y2="10"/><line x1="8" y1="10" x2="8" y2="10"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="8" y1="14" x2="8" y2="14"/><line x1="16" y1="18" x2="16" y2="18"/><line x1="12" y1="18" x2="12" y2="18"/><line x1="8" y1="18" x2="8" y2="18"/></svg>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><line x1="8" y1="6" x2="16" y2="6"/></svg>
                             المجموع
                         </span>
-                        <span class="summary-value">--</span>
+                        <span class="summary-value dzd-font" id="total-display">DZD 3,400.00</span>
                     </div>
                 </div>
 
-                <!-- ✅ NETLIFY: added name, data-netlify, removed action="#" -->
-                <form class="cod-form" name="orders" method="POST" data-netlify="true">
-                    <!-- ✅ NETLIFY: required hidden field -->
-                    <input type="hidden" name="form-name" value="orders">
+                <!-- SUCCESS MESSAGE (hidden by default) -->
+                <div id="success-msg" style="display:none; background:#d4edda; color:#155724; border:1px solid #c3e6cb; border-radius:8px; padding:16px; text-align:center; margin-bottom:16px; font-size:15px;">
+                    ✅ تم إرسال طلبك بنجاح! سنتصل بك قريباً للتأكيد.
+                </div>
+
+                <!-- ERROR MESSAGE (hidden by default) -->
+                <div id="error-msg" style="display:none; background:#f8d7da; color:#721c24; border:1px solid #f5c6cb; border-radius:8px; padding:16px; text-align:center; margin-bottom:16px; font-size:15px;"></div>
+
+                <form class="cod-form" id="order-form-el" novalidate>
 
                     <div class="form-group">
                         <label>الإسم الكامل <span class="required">*</span></label>
                         <div class="input-with-icon">
-                            <!-- ✅ NETLIFY: added name="full_name" -->
-                            <input type="text" name="full_name" placeholder="Nom complet" required>
+                            <input type="text" name="full_name" id="full_name" placeholder="Nom complet" required>
                             <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
                         </div>
                     </div>
@@ -135,18 +152,20 @@
                     <div class="form-group">
                         <label>الهاتف <span class="required">*</span></label>
                         <div class="input-with-icon">
-                            <!-- ✅ NETLIFY: added name="phone" -->
-                            <input type="tel" name="phone" placeholder="Numéro de téléphone" required dir="ltr" style="text-align: right;">
+                            <!-- FIXED: pattern enforced, maxlength=10 -->
+                            <input type="tel" name="phone" id="phone" placeholder="07XXXXXXXX" required dir="ltr"
+                                   style="text-align: right;" maxlength="10" pattern="^(0)(5|6|7)[0-9]{8}$">
                             <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
                         </div>
+                        <small id="phone-error" style="color:#e74c3c;display:none;font-size:12px;">رقم الهاتف غير صحيح. مثال: 0771234567</small>
                     </div>
 
                     <div class="form-group">
                         <label>الولاية <span class="required">*</span></label>
                         <div class="input-with-icon">
-                            <!-- ✅ NETLIFY: added name="wilaya" -->
+                            <!-- FIXED: wilaya select drives the commune dropdown -->
                             <select name="wilaya" class="wilaya-select" id="wilaya-select" required>
-                                <option value="" disabled selected>Wilaya</option>
+                                <option value="" disabled selected>اختر الولاية</option>
                                 <option value="1">01 - Adrar</option>
                                 <option value="2">02 - Chlef</option>
                                 <option value="3">03 - Laghouat</option>
@@ -210,11 +229,13 @@
                         </div>
                     </div>
 
+                    <!-- FIXED: Commune is now a dependent dropdown, not a free-text field -->
                     <div class="form-group">
                         <label>البلدية <span class="required">*</span></label>
                         <div class="input-with-icon">
-                            <!-- ✅ NETLIFY: added name="baladiya" -->
-                            <input type="text" name="baladiya" id="baladiya-input" placeholder="Baladiya (Commune)" required>
+                            <select name="baladiya" id="commune-select" required disabled>
+                                <option value="" disabled selected>اختر الولاية أولاً</option>
+                            </select>
                             <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg>
                         </div>
                     </div>
@@ -222,21 +243,13 @@
                     <div class="form-group">
                         <label>العنوان</label>
                         <div class="input-with-icon">
-                            <!-- ✅ NETLIFY: added name="address" -->
-                            <input type="text" name="address" placeholder="Adresse de livraison">
+                            <input type="text" name="address" id="address" placeholder="Adresse de livraison">
                             <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
                         </div>
                     </div>
 
-                    <div class="quantity-selector">
-                        <button type="button" class="qty-btn" id="minus-btn">−</button>
-                        <!-- ✅ NETLIFY: added name="quantity" -->
-                        <input type="number" name="quantity" id="qty-input" value="1" min="1" max="10" readonly>
-                        <button type="button" class="qty-btn" id="plus-btn">+</button>
-                    </div>
-
                     <button type="submit" class="submit-btn" id="submit-purchase">
-                        إشتري الان
+                        إشتري الآن
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
                     </button>
                 </form>
@@ -248,7 +261,7 @@
         </div>
     </section>
 
-    <!-- Features Grid (MOVED DOWN) -->
+    <!-- Features Grid -->
     <section class="features" id="features">
         <div class="container section-header fade-in">
             <h2>تكنولوجيا تناسب البيئة الجزائرية</h2>
@@ -271,7 +284,6 @@
             </div>
             <div class="feature-card fade-in">
                 <div class="feature-icon">
-                    <!-- Fan icon -->
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 12l2.5-7.5C16.5 4.5 19 6 19 8.5 19 11 12 12 12 12z"/><path d="M12 12L4.5 9.5C4.5 5.5 6 3 8.5 3 11 3 12 12 12 12z"/><path d="M12 12l-2.5 7.5C7.5 19.5 5 18 5 15.5 5 13 12 12 12 12z"/><path d="M12 12l7.5 2.5C19.5 18.5 18 21 15.5 21 13 21 12 12 12 12z"/></svg>
                 </div>
                 <h3>تبريد خارق حتى 50°</h3>
@@ -287,7 +299,7 @@
         </div>
     </section>
 
-    <!-- Reviews Section (MOVED TO BOTTOM) -->
+    <!-- Reviews Section -->
     <section class="reviews">
         <div class="container section-header fade-in">
             <h2>آراء الزبائن من مختلف أنحاء الوطن</h2>
@@ -323,5 +335,284 @@
     </footer>
 
     <script src="script.js"></script>
+
+    <script>
+    // ============================================================
+    // ⚙️  CONFIG — REPLACE THESE TWO VALUES
+    // ============================================================
+    const TELEGRAM_TOKEN   = "PASTE_YOUR_BOT_TOKEN_HERE";
+    const TELEGRAM_CHAT_ID = "PASTE_YOUR_CHAT_ID_HERE";
+    // ============================================================
+
+    const PRODUCT_PRICE = 2900;
+    const SHIPPING_COST = 500;
+
+    // ============================================================
+    // COMMUNES DATA — All 58 Wilayas
+    // ============================================================
+    const COMMUNES = {
+      1:  ["أدرار","رقان","أولف","زاوية كنتة","تيميمون","فنوغيل","بودة","تيت","عين صالح","إن زغمير"],
+      2:  ["الشلف","تنس","أم الدروع","البطحية","أبو الحسن","حرشون","بني حواء","الهرانفة","واد فضة","بريرة"],
+      3:  ["الأغواط","قصر الحيران","تاجموت","آفلو","حاسي الرمل","برج بوناعامة","سيدي مخلوف","عين ماضي"],
+      4:  ["أم البواقي","عين البيضاء","عين مليلة","عين فكرون","سوق نعمان","عين الديس","فكيرينة","بهير الشرقي"],
+      5:  ["باتنة","آريس","تازولت","منعة","مروانة","نقاوس","بريكة","سريانة","عين التوتة","رأس العيون"],
+      6:  ["بجاية","أقبو","الخروب","تيشي","أميزور","سيدي عيش","فرعون","بني ملول","خراطة","الدراعة"],
+      7:  ["بسكرة","طولقة","سيدي عقبة","أوماش","زريبة الوادي","فوغالة","أورلال","برانيس","المزيرعة"],
+      8:  ["بشار","القنادسة","عين الصفراء","بني عباس","كرزاز","إقلي","تاغيت","أبادلة","مرهوم"],
+      9:  ["البليدة","أولاد يعيش","موزاية","مفتاح","الأربعاء","بني مراد","بوعرفة","الشفة","سيدي موسى"],
+      10: ["البويرة","الأخضرية","عين بسام","سور الغزلان","المعاضيد","القصبة","شنة","واضية","حيزر"],
+      11: ["تمنراست","عين قزام","إدلس","إن گار","عين أمقل","تازروك"],
+      12: ["تبسة","الشريعة","بئر العاتر","الحمامات","أم علي","عين زرقة","بئر مقدم","العقلة"],
+      13: ["تلمسان","المنصورة","النجمة","سيدي بلعباس","مغنية","غزوات","بني صاف","الغزوات","سبدو","الرمشي"],
+      14: ["تيارت","سوق إثنين","قصر الشلالة","مهدية","راشد","الملحة","المدية","مشرع الصفاء","العيسية"],
+      15: ["تيزي وزو","عزازقة","الأربعاء ن سعيدان","دراع الميزان","بني يني","لربعاء","أقبيل","تاوريرت","بوزقن"],
+      16: ["الجزائر","باب الوادي","حيدرة","باب الزوار","الحراش","رويبة","قبة","المحمدية","بئر مراد رايس","الدار البيضاء"],
+      17: ["الجلفة","عين وسارة","حاسي بحبح","مسعد","دار الشيوخ","عين إبل","بيرين","سيدي لعجال","الإدريسية"],
+      18: ["جيجل","الطاهير","تاسكريت","الشقفة","أميجاس","زيامة منصورية","الميلية","غبالة","سيدي معروف"],
+      19: ["سطيف","عين أرنات","بوق الإسعد","الأشير","أولاد السبح","بئر العرش","عين لقشاش","صالح باي"],
+      20: ["سعيدة","عين الحجر","سيدي أحمد","الحساسنة","عين سخونة","يوب","مولاي الطاهر","الحساسنة"],
+      21: ["سكيكدة","عزابة","الحروش","واد الزهور","بن عزوز","القل","رمضان جمال","بوشطاطة"],
+      22: ["سيدي بلعباس","تلاغ","سيدي يحيى","مرحوم","تيلموني","السهالة","محمد بن علي","مزاورو"],
+      23: ["عنابة","البوني","الحجار","سرايدي","شطايبي","برحال","عين الباردة"],
+      24: ["قالمة","بوشقوف","بن جراح","عين مخلوف","هليوبوليس","النشاوية","المحاميد","عين صندل"],
+      25: ["قسنطينة","علي منجلي","ابن زياد","بني حميدان","ديدوش مراد","زيغود يوسف","المسيد"],
+      26: ["المدية","قصر البخاري","الأزهرية","بئر الوطن","قلعة المحاطبة","شلالة العذاورة","ايت رضا"],
+      27: ["مستغانم","عين تادلس","مزغران","سيرات","بوقيراط","صيادة","خضرة","حسين","قريريط"],
+      28: ["المسيلة","بريهمة","البرهوم","أولاد ماضي","بوسعادة","سيدي عيسى","أولاد درار","مقرة"],
+      29: ["معسكر","غريس","بوهران","سيق","حمام بوحجر","المحمدية","زهانة","مل","بوهران"],
+      30: ["ورقلة","النقوسة","تقرت","سيدي سليمان","تيبسبست","الروينة","حاسي مسعود","المقارين"],
+      31: ["وهران","أرزيو","سيدي الشحمي","بطيوة","بن سايح","حاسي بن عقبة","المرسى الكبير","الكرمة","عين الترك"],
+      32: ["البيض","بوسمغون","الأبيض سيدي الشيخ","الشقيق","ستيتن","الكسب","المحرة","العسلة","واد المياه"],
+      33: ["إليزي","دبدب","برج عمر إدريس","الدبداب"],
+      34: ["برج بو عريريج","البرج","الحمادنة","رأس الوادي","بئر قصاع","عين تاغروت","المنصورة","تاقصبت"],
+      35: ["بومرداس","نقاوس","الثنية","القدرة","الأرزان","إسي عيسى","بودواو","تيجلابين","زموري"],
+      36: ["الطارف","القالة","الشافية","أم الطبول","عين الكرمة","شبيطة","ذرعان","بريحان","شبيطة"],
+      37: ["تندوف","تندوف"],
+      38: ["تيسمسيلت","ثنية الحد","بوقارة","الأزهرية","لاربعاء","سيدي سليمان","الشاوية"],
+      39: ["الوادي","الطالب العربي","تالب العربي","الرباح","دبيلة","حاسي خليفة","المغير","الرقيبة"],
+      40: ["خنشلة","بغاي","أنسيغة","كاييس","ماستر","طامزة","شليا","أولاد رشاش"],
+      41: ["سوق أهراس","سدراتة","مداوروش","أم العظائم","تاورة","حنانشة","عين زانة","الزعرورية"],
+      42: ["تيبازة","الشرشال","بوهارون","فوكة","حطاطبة","القليعة","برواقية","مراد"],
+      43: ["ميلة","فرجيوة","رواشة","تاجنانت","سيدي مروان","أحمد راشدي","المنار","عميرة أرفاس"],
+      44: ["عين الدفلى","مليانة","خميس مليانة","الجندل","بوعيسي","رأس الوادي","المسعودة","جندل"],
+      45: ["النعامة","عين الصفراء","مشرية","عسلة","تيوت","قصابات","البيوض","صفيصفة"],
+      46: ["عين تموشنت","بني صاف","حمام بوحجر","أولاد الكيلاني","تارقة","المسيرد","أقلعيم"],
+      47: ["غرداية","العطف","بريان","زلفانة","متليلي","منيعة","القرارة","ضاية بن ضحوة"],
+      48: ["غليزان","جديوية","ماسرة","سيدي سعادة","واريزان","بني دقول","المطمر","زمالة","حمري"],
+      49: ["تيميمون","متارفة","أوقروت","أولاد سعيد","أوف","اقبلي","شروين"],
+      50: ["برج باجي مختار","برج باجي مختار","تيمياوين"],
+      51: ["أولاد جلال","أولاد جلال","سيدي خالد","الدوسن","راس الميعاد"],
+      52: ["بني عباس","بني عباس","تامتيرت","كرزاز","إقلي"],
+      53: ["عين صالح","عين صالح","فقارة الزوى","مرتجانة"],
+      54: ["عين ڨزام","عين ڨزام","تين زواتن"],
+      55: ["تقرت","تقرت","الطيبات","تماسين","الحجيرة","المقارين"],
+      56: ["جانت","جانت","برج عمر إدريس"],
+      57: ["المغير","المغير","جامعة","سيدي خليل"],
+      58: ["المنيعة","المنيعة","حاسي فحل","ابن أحمد"]
+    };
+
+    // Wilaya names for display in Telegram message
+    const WILAYA_NAMES = {
+      1:"أدرار",2:"الشلف",3:"الأغواط",4:"أم البواقي",5:"باتنة",6:"بجاية",7:"بسكرة",
+      8:"بشار",9:"البليدة",10:"البويرة",11:"تمنراست",12:"تبسة",13:"تلمسان",14:"تيارت",
+      15:"تيزي وزو",16:"الجزائر",17:"الجلفة",18:"جيجل",19:"سطيف",20:"سعيدة",
+      21:"سكيكدة",22:"سيدي بلعباس",23:"عنابة",24:"قالمة",25:"قسنطينة",26:"المدية",
+      27:"مستغانم",28:"المسيلة",29:"معسكر",30:"ورقلة",31:"وهران",32:"البيض",
+      33:"إليزي",34:"برج بو عريريج",35:"بومرداس",36:"الطارف",37:"تندوف",38:"تيسمسيلت",
+      39:"الوادي",40:"خنشلة",41:"سوق أهراس",42:"تيبازة",43:"ميلة",44:"عين الدفلى",
+      45:"النعامة",46:"عين تموشنت",47:"غرداية",48:"غليزان",49:"تيميمون",50:"برج باجي مختار",
+      51:"أولاد جلال",52:"بني عباس",53:"عين صالح",54:"عين ڨزام",55:"تقرت",
+      56:"جانت",57:"المغير",58:"المنيعة"
+    };
+
+    // ============================================================
+    // QUANTITY & PRICING LOGIC
+    // ============================================================
+    const qtyInput    = document.getElementById('qty-input');
+    const minusBtn    = document.getElementById('minus-btn');
+    const plusBtn     = document.getElementById('plus-btn');
+    const totalDisplay   = document.getElementById('total-display');
+    const productDisplay = document.getElementById('product-price-display');
+
+    function updatePricing() {
+      const qty = parseInt(qtyInput.value) || 1;
+      const productTotal = PRODUCT_PRICE * qty;
+      const grandTotal   = productTotal + SHIPPING_COST;
+      productDisplay.textContent = `DZD ${productTotal.toLocaleString('fr-DZ', {minimumFractionDigits:2})}`;
+      totalDisplay.textContent   = `DZD ${grandTotal.toLocaleString('fr-DZ', {minimumFractionDigits:2})}`;
+    }
+
+    minusBtn.addEventListener('click', () => {
+      const v = parseInt(qtyInput.value);
+      if (v > 1) { qtyInput.value = v - 1; updatePricing(); }
+    });
+    plusBtn.addEventListener('click', () => {
+      const v = parseInt(qtyInput.value);
+      if (v < 10) { qtyInput.value = v + 1; updatePricing(); }
+    });
+
+    // ============================================================
+    // DEPENDENT COMMUNE DROPDOWN
+    // ============================================================
+    const wilayaSelect  = document.getElementById('wilaya-select');
+    const communeSelect = document.getElementById('commune-select');
+
+    wilayaSelect.addEventListener('change', function () {
+      const wid = parseInt(this.value);
+      const communes = COMMUNES[wid] || [];
+
+      communeSelect.innerHTML = '<option value="" disabled selected>اختر البلدية</option>';
+      communes.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = c;
+        communeSelect.appendChild(opt);
+      });
+
+      communeSelect.disabled = false;
+    });
+
+    // ============================================================
+    // PHONE VALIDATION
+    // ============================================================
+    const phoneInput = document.getElementById('phone');
+    const phoneError = document.getElementById('phone-error');
+    const PHONE_REGEX = /^(0)(5|6|7)[0-9]{8}$/;
+
+    phoneInput.addEventListener('input', function () {
+      // Only allow digits
+      this.value = this.value.replace(/\D/g, '').slice(0, 10);
+    });
+
+    function validatePhone(val) {
+      return PHONE_REGEX.test(val);
+    }
+
+    phoneInput.addEventListener('blur', function () {
+      if (this.value && !validatePhone(this.value)) {
+        phoneError.style.display = 'block';
+      } else {
+        phoneError.style.display = 'none';
+      }
+    });
+
+    // ============================================================
+    // TELEGRAM NOTIFICATION
+    // ============================================================
+    async function sendTelegram(order) {
+      const msg =
+        `🛒 *طلب جديد — TOAUTO H4 LED*\n\n` +
+        `👤 الاسم: ${order.name}\n` +
+        `📞 الهاتف: ${order.phone}\n` +
+        `📍 الولاية: ${order.wilaya}\n` +
+        `🏘️ البلدية: ${order.commune}\n` +
+        `📌 العنوان: ${order.address || 'غير محدد'}\n` +
+        `📦 الكمية: ${order.qty}\n` +
+        `💰 سعر المنتج: ${(PRODUCT_PRICE * order.qty).toLocaleString()} دج\n` +
+        `🚚 التوصيل: ${SHIPPING_COST.toLocaleString()} دج\n` +
+        `💵 المجموع: ${(PRODUCT_PRICE * order.qty + SHIPPING_COST).toLocaleString()} دج\n` +
+        `🕐 الوقت: ${new Date().toLocaleString('fr-DZ')}`;
+
+      const res = await fetch(
+        `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: TELEGRAM_CHAT_ID,
+            text: msg,
+            parse_mode: 'Markdown'
+          })
+        }
+      );
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.description || 'Telegram API error');
+      }
+    }
+
+    // ============================================================
+    // FORM SUBMIT HANDLER
+    // ============================================================
+    const form      = document.getElementById('order-form-el');
+    const submitBtn = document.getElementById('submit-purchase');
+    const successEl = document.getElementById('success-msg');
+    const errorEl   = document.getElementById('error-msg');
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      // Hide previous messages
+      successEl.style.display = 'none';
+      errorEl.style.display   = 'none';
+
+      const name    = document.getElementById('full_name').value.trim();
+      const phone   = phoneInput.value.trim();
+      const wilayaId = parseInt(wilayaSelect.value);
+      const commune = communeSelect.value;
+      const address = document.getElementById('address').value.trim();
+      const qty     = parseInt(qtyInput.value);
+
+      // --- Validation ---
+      if (!name) {
+        showError('يرجى إدخال الاسم الكامل.');
+        return;
+      }
+      if (!validatePhone(phone)) {
+        phoneError.style.display = 'block';
+        phoneInput.focus();
+        return;
+      }
+      if (!wilayaId) {
+        showError('يرجى اختيار الولاية.');
+        return;
+      }
+      if (!commune) {
+        showError('يرجى اختيار البلدية.');
+        return;
+      }
+
+      // --- Disable button & show loading ---
+      submitBtn.disabled    = true;
+      submitBtn.textContent = '⏳ جاري الإرسال...';
+
+      try {
+        await sendTelegram({
+          name,
+          phone,
+          wilaya: `${wilayaId.toString().padStart(2,'0')} - ${WILAYA_NAMES[wilayaId]}`,
+          commune,
+          address,
+          qty
+        });
+
+        // Success
+        form.reset();
+        communeSelect.innerHTML = '<option value="" disabled selected>اختر الولاية أولاً</option>';
+        communeSelect.disabled  = true;
+        qtyInput.value          = 1;
+        updatePricing();
+        successEl.style.display = 'block';
+        successEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      } catch (err) {
+        showError('حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى أو التواصل معنا مباشرة.');
+        console.error(err);
+      } finally {
+        submitBtn.disabled    = false;
+        submitBtn.innerHTML   = 'إشتري الآن <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>';
+      }
+    });
+
+    function showError(msg) {
+      errorEl.textContent    = '⚠️ ' + msg;
+      errorEl.style.display  = 'block';
+      errorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // Initialize pricing on load
+    updatePricing();
+    </script>
 </body>
 </html>
