@@ -4,7 +4,7 @@ const TELEGRAM_CHAT_ID = "698115495";
 
 async function notifyAdmin(order) {
     const message =
-        `🛒 *طلب جديد - TOAUTO H4 LED*\n` +
+        `🛒 طلب جديد - TOAUTO H4 LED\n` +
         `👤 الاسم: ${order.name}\n` +
         `📞 الهاتف: ${order.phone}\n` +
         `📍 الولاية: ${order.wilaya}\n` +
@@ -14,15 +14,17 @@ async function notifyAdmin(order) {
         `💰 المجموع: ${order.total} DZD\n` +
         `🕐 التوقيت: ${new Date().toLocaleString("fr-DZ")}`;
 
-    await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+    const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             chat_id: TELEGRAM_CHAT_ID,
-            text: message,
-          
+            text: message
         })
     });
+
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.description);
 }
 // ===========================
 
@@ -91,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 phone:    form.querySelector('input[type="tel"]').value,
                 wilaya:   document.getElementById('wilaya-select').options[document.getElementById('wilaya-select').selectedIndex].text,
                 commune:  document.getElementById('baladiya-input').value,
-                address:  form.querySelectorAll('input[type="text"]')[1]?.value || '',
+                address:  form.querySelectorAll('input[type="text"]')[2]?.value || '',
                 quantity: qtyInput.value,
                 total:    (basePrice * parseInt(qtyInput.value)).toLocaleString('en-US')
             };
@@ -106,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 form.reset();
                 updatePrices();
             } catch (err) {
-                alert('❌ حدث خطأ. يرجى المحاولة مرة أخرى.');
+                alert('❌ خطأ: ' + err.message);
                 console.error(err);
             } finally {
                 submitBtn.disabled = false;
