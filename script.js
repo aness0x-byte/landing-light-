@@ -1,24 +1,24 @@
 // ===== TELEGRAM CONFIG =====
-const TELEGRAM_TOKEN = "8782603786:AAF7Ca8xmRIpvr6cUoEK4spRhD_wvgHiEaQ";
+const 8782603786:AAF7Ca8xmRIpvr6cUoEK4spRhD_wvgHiEaQ= "8782603786:AAF7Ca8xmRIpvr6cUoEK4spRhD_wvgHiEaQe";
 const TELEGRAM_CHAT_ID = "698115495";
 
 async function notifyAdmin(order) {
     const message =
-        `🛒 *New Order Received*\n` +
-        `👤 Name: ${order.name}\n` +
-        `📞 Phone: ${order.phone}\n` +
-        `📍 Wilaya: ${order.wilaya}\n` +
-        `🏘️ Municipality: ${order.commune}\n` +
-        `📦 Product: H4 LED\n` +
-        `🔢 Qty: ${order.quantity}\n` +
-        `💰 Total: ${order.total} DZD\n` +
-        `🕐 Time: ${new Date().toLocaleString("fr-DZ")}`;
+        `🛒 *طلب جديد - TOAUTO H4 LED*\n` +
+        `👤 الاسم: ${order.name}\n` +
+        `📞 الهاتف: ${order.phone}\n` +
+        `📍 الولاية: ${order.wilaya}\n` +
+        `🏘️ البلدية: ${order.commune}\n` +
+        `🏠 العنوان: ${order.address || 'غير محدد'}\n` +
+        `🔢 الكمية: ${order.quantity}\n` +
+        `💰 المجموع: ${order.total} DZD\n` +
+        `🕐 التوقيت: ${new Date().toLocaleString("fr-DZ")}`;
 
-    await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+    await fetch(`https://api.telegram.org/bot${8782603786:AAF7Ca8xmRIpvr6cUoEK4spRhD_wvgHiEaQ}/sendMessage`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            chat_id: TELEGRAM_CHAT_ID,
+            chat_id: 698115495,
             text: message,
             parse_mode: "Markdown"
         })
@@ -27,12 +27,8 @@ async function notifyAdmin(order) {
 // ===========================
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Intersection Observer for fade-in animations
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.15
-    };
+
+    // Fade-in animations
     const observer = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -40,9 +36,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 observer.unobserve(entry.target);
             }
         });
-    }, observerOptions);
-    const fadeElements = document.querySelectorAll('.fade-in');
-    fadeElements.forEach(el => observer.observe(el));
+    }, { root: null, rootMargin: '0px', threshold: 0.15 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
     // Smooth scrolling
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -55,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Quantity and price calculation
+    // Quantity and price
     const basePrice = 2900;
     const qtyInput = document.getElementById('qty-input');
     const btnMinus = document.getElementById('minus-btn');
@@ -84,20 +80,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     updatePrices();
 
-    // Form submission + Telegram notification
+    // Form submission + Telegram
     const form = document.querySelector('.cod-form');
+    const inputs = form.querySelectorAll('input, select');
+    // inputs[0] = name, inputs[1] = phone, inputs[2] = address (wilaya is by ID, commune by ID)
+
     if (form) {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const order = {
-                name:     document.getElementById('name').value,
-                phone:    document.getElementById('phone').value,
-                wilaya:   document.getElementById('wilaya').value,
-                commune:  document.getElementById('commune').value,
+                name:     form.querySelector('input[type="text"]').value,
+                phone:    form.querySelector('input[type="tel"]').value,
+                wilaya:   document.getElementById('wilaya-select').options[document.getElementById('wilaya-select').selectedIndex].text,
+                commune:  document.getElementById('baladiya-input').value,
+                address:  form.querySelectorAll('input[type="text"]')[1]?.value || '',
                 quantity: qtyInput.value,
                 total:    (basePrice * parseInt(qtyInput.value)).toLocaleString('en-US')
             };
+
+            const submitBtn = document.getElementById('submit-purchase');
+            submitBtn.disabled = true;
+            submitBtn.textContent = '...جاري الإرسال';
 
             try {
                 await notifyAdmin(order);
@@ -107,6 +111,9 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (err) {
                 alert('❌ حدث خطأ. يرجى المحاولة مرة أخرى.');
                 console.error(err);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'إشتري الان';
             }
         });
     }
