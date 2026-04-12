@@ -1,5 +1,5 @@
 // ===== TELEGRAM CONFIG =====
-const TELEGRAM_TOKEN= "8782603786:AAF7Ca8xmRIpvr6cUoEK4spRhD_wvgHiEaQe";
+const TELEGRAM_TOKEN = "8782603786:AAF7Ca8xmRIpvr6cUoEK4spRhD_wvgHiEaQ";
 const TELEGRAM_CHAT_ID = "698115495";
 
 async function notifyAdmin(order) {
@@ -14,11 +14,11 @@ async function notifyAdmin(order) {
         `💰 المجموع: ${order.total} DZD\n` +
         `🕐 التوقيت: ${new Date().toLocaleString("fr-DZ")}`;
 
-    await fetch(`https://api.telegram.org/bot${8782603786:AAF7Ca8xmRIpvr6cUoEK4spRhD_wvgHiEaQ}/sendMessage`, {
+    await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            chat_id: 698115495,
+            chat_id: TELEGRAM_CHAT_ID,
             text: message,
             parse_mode: "Markdown"
         })
@@ -82,9 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Form submission + Telegram
     const form = document.querySelector('.cod-form');
-    const inputs = form.querySelectorAll('input, select');
-    // inputs[0] = name, inputs[1] = phone, inputs[2] = address (wilaya is by ID, commune by ID)
-
     if (form) {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
