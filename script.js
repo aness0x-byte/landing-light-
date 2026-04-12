@@ -1,5 +1,5 @@
 // ===== TELEGRAM CONFIG =====
-const 8782603786:AAF7Ca8xmRIpvr6cUoEK4spRhD_wvgHiEaQ= "8782603786:AAF7Ca8xmRIpvr6cUoEK4spRhD_wvgHiEaQe";
+const TELEGRAM_TOKEN= "8782603786:AAF7Ca8xmRIpvr6cUoEK4spRhD_wvgHiEaQe";
 const TELEGRAM_CHAT_ID = "698115495";
 
 async function notifyAdmin(order) {
